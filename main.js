@@ -4,11 +4,10 @@ const User = require('./tdus/User');
 
 async function loadJsonRecords(filename) {
     try {
-        const filePath = path.join(__dirname, filename);
-        const data = await fs.readFile(filePath, 'utf8');
+        const data = await fs.readFile(path.join(__dirname, filename), 'utf8');
         return JSON.parse(data);
     } catch (err) {
-        console.error(`Erro ao carregar o arquivo JSON ${filename}:`, err);
+        console.error('Erro ao carregar JSON:', err);
         return null;
     }
 }
@@ -22,30 +21,21 @@ function populateUserRecords(jsonLikeUserList) {
 
     for (const userData of jsonLikeUserList) {
         try {
-            const user = new User(userData.User);
+            let data = userData;
+            if (userData.User) {
+                data = userData.User;
+            }
+            const user = new User(data);
             userRecords.push(user);
         } catch (error) {
-            console.error("Erro ao criar instância de User para os dados:", userData.User, error);
+            console.error("Erro ao criar instância de User para os dados:", userData, error);
         }
     }
     return userRecords;
 }
-async function main() {
-    const jsonFilename = 'dados.json';
-    const jsonLikeUserList = await loadJsonRecords(jsonFilename);
 
-    if (jsonLikeUserList) {
-        const userRecords = populateUserRecords(jsonLikeUserList);
-        console.log(`Foram criados ${userRecords.length} registros de usuários.`);
-        // Exemplo: Acesse um registro
-        if (userRecords.length > 0) {
-            console.log("Primeiro usuário (instância de User):", userRecords[0]);
-            console.log("Nome do primeiro usuário:", userRecords[0].name);
-            console.log("Horas de estudo do primeiro usuário:", userRecords[0].dailyHours.dailyHoursStudy);
-            console.log("Nível de saúde mental do primeiro usuário:", userRecords[0].healthIndicators.mentalHealthIndicators.mentalHealthLevel);
-        }
-    } else {
-        console.log("Não foi possível carregar os dados JSON para popular os registros.");
-    }
-}
-main();
+// Exporta ambas as funções
+module.exports = {
+    loadJsonRecords,
+    populateUserRecords
+};

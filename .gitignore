@@ -134,3 +134,7 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+dados.json
+TASK-BCC-LP1-2025.1-N2 - TASK-BCC-LP1-2025.1-N2.csv
+/records
